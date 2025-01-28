@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import Login from './auth/Login';
-import SignUp from './auth/SignUp';
+import Login from 'src/components/auth/Login';
+import SignUp from 'src/components/auth/SignUp';
 
 function AuthSection() {
   const [activeTab, setActiveTab] = useState('login');
