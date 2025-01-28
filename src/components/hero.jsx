@@ -1,6 +1,20 @@
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 function Hero() {
+  const location = useLocation();
+
+  const scrollToAuth = () => {
+    if (location.pathname === '/') {
+      const authSection = document.getElementById('auth-section');
+      if (authSection) {
+        authSection.scrollIntoView({ behavior: 'smooth' });
+        // Dispatch custom event to switch form to signup
+        window.dispatchEvent(new CustomEvent('switchAuthForm', { detail: 'signup' }));
+      }
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -64,6 +78,7 @@ function Hero() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={scrollToAuth}
               className="px-8 py-4 bg-primary text-darker rounded-lg font-semibold hover:bg-secondary transition-colors duration-300 glow"
             >
               Try for Free →

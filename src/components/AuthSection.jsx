@@ -1,10 +1,29 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Login from './auth/Login';
 import SignUp from './auth/SignUp';
 
 function AuthSection() {
   const [activeTab, setActiveTab] = useState('login');
+
+  useEffect(() => {
+    const handleSwitchForm = (e) => {
+      setActiveTab(e.detail);
+    };
+
+    window.addEventListener('switchAuthForm', handleSwitchForm);
+    
+    // Check URL params for initial form state
+    const urlParams = new URLSearchParams(window.location.search);
+    const formType = urlParams.get('form');
+    if (formType) {
+      setActiveTab(formType);
+    }
+
+    return () => {
+      window.removeEventListener('switchAuthForm', handleSwitchForm);
+    };
+  }, []);
 
   const handleSwitchToSignup = () => {
     setActiveTab('signup');
@@ -15,7 +34,7 @@ function AuthSection() {
   };
 
   return (
-    <div className="py-20 bg-darker">
+    <div id="auth-section" className="py-20 bg-darker">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           <motion.div

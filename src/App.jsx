@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
-import Header from './components/Header.jsx';
-import LandingPage from './components/pages/LandingPage.jsx';
-import ChatPage from './components/pages/ChatPage.jsx';
-import Profile from './components/pages/Profile.jsx';
+import Header from './components/Header';
+import LandingPage from './components/pages/LandingPage';
+import ChatPage from './components/pages/ChatPage';
+import Profile from './components/pages/Profile';
+import About from './components/pages/About';
+import Features from './components/pages/Features';
 
-// going to replace it with actual auth logic 
+// Simulated auth state - replace with actual auth logic
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return { isAuthenticated, setIsAuthenticated };
 };
 
@@ -43,10 +45,12 @@ function App() {
                 <Navigate to="/" replace />
             } 
           />
+          <Route path="/about" element={<About />} />
+          <Route path="/features" element={<Features />} />
         </Routes>
       </div>
     </Router>
   );
 }
 
-export default App
+export default App;
