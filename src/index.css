@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary: #8957e5;
+  --secondary: #a371f7;
+  --dark: #0d1117;
+  --darker: #010409;
+  --gray-dark: #161b22;
+  --text: #e6edf3;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--darker);
+  color: var(--text);
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    135deg,
+    var(--darker) 0%,
+    var(--dark) 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(137, 87, 229, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 0% 50%, rgba(137, 87, 229, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 100% 50%, rgba(137, 87, 229, 0.1) 0%, transparent 50%);
+  z-index: -1;
+}
+
+.glow {
+  position: relative;
+}
+
+.glow::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  z-index: -1;
+  filter: blur(14px);
+  opacity: 0.15;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.glow:hover::after {
+  opacity: 0.3;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(137, 87, 229, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(137, 87, 229, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+}
