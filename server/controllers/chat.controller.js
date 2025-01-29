@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 const assistant = async (req ,res) =>{
     const { prompt } = req.body;
     
