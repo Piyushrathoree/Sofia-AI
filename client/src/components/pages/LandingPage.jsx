@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import Hero from 'src/components/Hero';
-import AuthSection from 'src/components/AuthSection';
-import Footer from 'src/components/Footer';
+import Hero from '../Hero';
+import AuthSection from '../AuthSection';
+import Footer from '../Footer';
 
 function LandingPage({ onLogin }) {
   const [ref, inView] = useInView({

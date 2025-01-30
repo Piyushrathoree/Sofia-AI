@@ -1,10 +1,11 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { loginUser } from "../../hooks/useValidate.js";
 
 function Login({ onSwitchToSignup }) {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -14,10 +15,10 @@ function Login({ onSwitchToSignup }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login data:', formData);
+    const response = await loginUser(formData.email, formData.password);
+    console.log("Login data:", response);
   };
 
   return (
@@ -27,11 +28,16 @@ function Login({ onSwitchToSignup }) {
       transition={{ duration: 0.5 }}
       className="w-full max-w-md mx-auto p-8 bg-dark rounded-xl border border-primary/20 shadow-2xl glow"
     >
-      <h2 className="text-3xl font-bold text-text mb-6 text-center">Welcome Back</h2>
-      
+      <h2 className="text-3xl font-bold text-text mb-6 text-center">
+        Welcome Back
+      </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <motion.div whileFocus={{ scale: 1.01 }}>
-          <label htmlFor="email" className="block text-sm font-medium text-text/60 mb-1">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-text/60 mb-1"
+          >
             Email
           </label>
           <input
@@ -46,7 +52,10 @@ function Login({ onSwitchToSignup }) {
         </motion.div>
 
         <motion.div whileFocus={{ scale: 1.01 }}>
-          <label htmlFor="password" className="block text-sm font-medium text-text/60 mb-1">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-text/60 mb-1"
+          >
             Password
           </label>
           <input
@@ -81,7 +90,7 @@ function Login({ onSwitchToSignup }) {
       </form>
 
       <p className="mt-4 text-center text-text/60">
-        Don't have an account?{' '}
+        Don't have an account?{" "}
         <motion.button
           whileHover={{ scale: 1.05 }}
           onClick={onSwitchToSignup}
