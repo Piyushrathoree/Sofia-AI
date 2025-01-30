@@ -1,15 +1,22 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import Header from 'src/components/Header';
-import LandingPage from 'src/components/pages/LandingPage';
-import ChatPage from 'src/components/pages/ChatPage';
-import Profile from 'src/components/pages/Profile';
-import About from 'src/components/pages/About';
-import Features from 'src/components/pages/Features';
+import { useState , useEffect } from 'react';
+import Header from './components/Header';
+import LandingPage from './components/pages/LandingPage';
+import ChatPage from './components/pages/ChatPage';
+import Profile from './components/pages/Profile';
+import About from './components/pages/About';
+import Features from './components/pages/Features';
 
 // Simulated auth state - replace with actual auth logic
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Simulate authentication check
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
   return { isAuthenticated, setIsAuthenticated };
 };
 
