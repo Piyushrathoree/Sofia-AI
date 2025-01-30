@@ -1,12 +1,13 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-
+import { motion } from "framer-motion";
+import { useState } from "react";
+import useValidate from "../../hooks/useValidate";
 function SignUp({ onSwitchToLogin }) {
+  const { registerUser } = useValidate();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -16,10 +17,16 @@ function SignUp({ onSwitchToLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle sign up logic here
-    console.log('Sign up data:', formData);
+    const response = await registerUser(
+      formData.firstName,
+      formData.lastName,
+      formData.email,
+      formData.password
+    );
+    console.log("Sign up data:", response);
   };
 
   return (
@@ -29,15 +36,17 @@ function SignUp({ onSwitchToLogin }) {
       transition={{ duration: 0.5 }}
       className="w-full max-w-md mx-auto p-8 bg-dark rounded-xl border border-primary/20 shadow-2xl glow"
     >
-      <h2 className="text-3xl font-bold text-text mb-6 text-center">Create Account</h2>
-      
+      <h2 className="text-3xl font-bold text-text mb-6 text-center">
+        Create Account
+      </h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <motion.div
-            whileFocus={{ scale: 1.01 }}
-            className="col-span-1"
-          >
-            <label htmlFor="firstName" className="block text-sm font-medium text-text/60 mb-1">
+          <motion.div whileFocus={{ scale: 1.01 }} className="col-span-1">
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-text/60 mb-1"
+            >
               First Name
             </label>
             <input
@@ -51,11 +60,11 @@ function SignUp({ onSwitchToLogin }) {
             />
           </motion.div>
 
-          <motion.div
-            whileFocus={{ scale: 1.01 }}
-            className="col-span-1"
-          >
-            <label htmlFor="lastName" className="block text-sm font-medium text-text/60 mb-1">
+          <motion.div whileFocus={{ scale: 1.01 }} className="col-span-1">
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-text/60 mb-1"
+            >
               Last Name
             </label>
             <input
@@ -71,7 +80,10 @@ function SignUp({ onSwitchToLogin }) {
         </div>
 
         <motion.div whileFocus={{ scale: 1.01 }}>
-          <label htmlFor="email" className="block text-sm font-medium text-text/60 mb-1">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-text/60 mb-1"
+          >
             Email
           </label>
           <input
@@ -86,7 +98,10 @@ function SignUp({ onSwitchToLogin }) {
         </motion.div>
 
         <motion.div whileFocus={{ scale: 1.01 }}>
-          <label htmlFor="password" className="block text-sm font-medium text-text/60 mb-1">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-text/60 mb-1"
+          >
             Password
           </label>
           <input
@@ -111,7 +126,7 @@ function SignUp({ onSwitchToLogin }) {
       </form>
 
       <p className="mt-4 text-center text-text/60">
-        Already have an account?{' '}
+        Already have an account?{" "}
         <motion.button
           whileHover={{ scale: 1.05 }}
           onClick={onSwitchToLogin}
