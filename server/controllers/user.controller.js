@@ -8,7 +8,9 @@ const registerUser = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        return res.status(400).json({ message: "Already a user, please login" });
+        return res
+            .status(400)
+            .json({ message: "Already a user, please login" });
     }
 
     const hashedPass = await User.hashPass(password);
@@ -17,17 +19,17 @@ const registerUser = async (req, res) => {
         firstName,
         lastName,
         email,
-        password: hashedPass
+        password: hashedPass,
     });
 
     if (!newUser) {
-        return res.status(400).json({ message: "Something went wrong while signup" });
+        return res
+            .status(400)
+            .json({ message: "Something went wrong while signup" });
     }
-
     // Save the new user before returning a response
     await newUser.save();
-
-    res.status(201).json({ message: "User created successfully", newUser });
+    res.status(201).json({ message: "User created successfully" });
 };
 
 const loginUser = async (req, res) => {
@@ -38,15 +40,29 @@ const loginUser = async (req, res) => {
 
     const existingUser = await User.findOne({ email }).select("-password");
     if (!existingUser) {
-        return res.status(400).json({ message: "User not found, please signUp" });
+        return res
+            .status(400)
+            .json({ message: "User not found, please signUp" });
     }
 
     const token = await existingUser.generateToken();
     if (!token) {
         return res.status(400).json({ message: "Token not found" });
     }
-
-    res.status(200).cookie("token", token).json({ message: "Login successful", token , existingUser });
+    // Set token in localStorage
+   
+    res.status(200)
+        .cookie("token", token, {
+            httpOnly: true, // Prevent access from JavaScript
+            sameSite: "Strict", // Prevent CSRF
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+        })
+        .json({ 
+            message: "Login successful", 
+            token, 
+            existingUser,
+            localStorageToken: `localStorage.setItem('token', '${token}')`
+        });
 };
 
 const logoutUser = async (req, res) => {
@@ -55,7 +71,20 @@ const logoutUser = async (req, res) => {
         return res.status(400).json({ message: "Already logged out" });
     }
 
-    res.clearCookie("token").status(200).json({ message: "User logged out successfully" });
+    res.clearCookie("token")
+        .status(200)
+        .json({ 
+            message: "User logged out successfully",
+            localStorageToken: "localStorage.removeItem('token')"
+        });
 };
 
-export { registerUser, loginUser, logoutUser };
+const getUserProfile = async (req, res) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    res.json({ user });
+};
+
+export { registerUser, loginUser, logoutUser, getUserProfile };
