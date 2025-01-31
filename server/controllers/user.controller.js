@@ -50,18 +50,18 @@ const loginUser = async (req, res) => {
         return res.status(400).json({ message: "Token not found" });
     }
     // Set token in localStorage
-   
+
     res.status(200)
         .cookie("token", token, {
             httpOnly: true, // Prevent access from JavaScript
             sameSite: "Strict", // Prevent CSRF
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         })
-        .json({ 
-            message: "Login successful", 
-            token, 
+        .json({
+            message: "Login successful",
+            token,
             existingUser,
-            localStorageToken: `localStorage.setItem('token', '${token}')`
+            localStorageToken: `localStorage.setItem('token', '${token}')`,
         });
 };
 
@@ -71,12 +71,10 @@ const logoutUser = async (req, res) => {
         return res.status(400).json({ message: "Already logged out" });
     }
 
-    res.clearCookie("token")
-        .status(200)
-        .json({ 
-            message: "User logged out successfully",
-            localStorageToken: "localStorage.removeItem('token')"
-        });
+    res.clearCookie("token").status(200).json({
+        message: "User logged out successfully",
+        localStorageToken: "localStorage.removeItem('token')",
+    });
 };
 
 const getUserProfile = async (req, res) => {
@@ -84,7 +82,7 @@ const getUserProfile = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
     }
-    res.json({ user });
+    res.json({ success: true, user: user });
 };
 
 export { registerUser, loginUser, logoutUser, getUserProfile };
