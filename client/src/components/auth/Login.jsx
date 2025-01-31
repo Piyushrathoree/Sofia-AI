@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { loginUser } from "../../hooks/useValidate.js";
+import useValidate from "../../hooks/useValidate.js";
 
 function Login({ onSwitchToSignup }) {
+  const { loginUser } = useValidate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,8 +18,8 @@ function Login({ onSwitchToSignup }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await loginUser(formData.email, formData.password);
-    console.log("Login data:", response);
+    await loginUser(formData.email, formData.password);
+    setFormData({ email: "", password: "" });
   };
 
   return (

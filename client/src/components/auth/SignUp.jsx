@@ -20,13 +20,14 @@ function SignUp({ onSwitchToLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle sign up logic here
-    const response = await registerUser(
+    await registerUser(
       formData.firstName,
       formData.lastName,
       formData.email,
       formData.password
     );
-    console.log("Sign up data:", response);
+    setFormData({ firstName: "", lastName: "", email: "", password: "" }); // Reset form fields after successful registration
+    onSwitchToLogin(); // Switch to login page after successful registration
   };
 
   return (
