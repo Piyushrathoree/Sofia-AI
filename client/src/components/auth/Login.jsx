@@ -20,6 +20,7 @@ function Login({ onSwitchToSignup }) {
     e.preventDefault();
     await loginUser(formData.email, formData.password);
     setFormData({ email: "", password: "" });
+    window.location.reload();
   };
 
   return (

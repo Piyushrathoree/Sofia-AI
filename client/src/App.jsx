@@ -10,13 +10,23 @@ import Features from './components/pages/Features';
 // Simulated auth state - replace with actual auth logic
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // Simulate authentication check
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      setIsAuthenticated(!!token); // ✅ Convert token to boolean (true if exists)
+    };
+
+    checkAuth();
+
+    // ✅ Listen for changes in localStorage (for token updates)
+    window.addEventListener("storage", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+    };
   }, []);
+
   return { isAuthenticated, setIsAuthenticated };
 };
 
