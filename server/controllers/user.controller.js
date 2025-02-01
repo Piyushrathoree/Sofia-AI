@@ -85,4 +85,18 @@ const getUserProfile = async (req, res) => {
     res.json({ success: true, user: user });
 };
 
+const updateProfile = async (req ,res ) =>{
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const { firstName, lastName } = req.body;
+    if (!firstName &&!lastName) {
+        return res.status(400).json({ message: "Please provide new first name or last name" });
+    }
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    await user.save();
+    res.json({ success: true, user });
+}
 export { registerUser, loginUser, logoutUser, getUserProfile };
