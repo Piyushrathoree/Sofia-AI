@@ -6,7 +6,7 @@ import ChatPage from './components/pages/ChatPage';
 import Profile from './components/pages/Profile';
 import About from './components/pages/About';
 import Features from './components/pages/Features';
-
+import ChatHistory from './components/pages/chatHistory';
 // Simulated auth state - replace with actual auth logic
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -59,6 +59,14 @@ function App() {
             element={
               isAuthenticated ? 
                 <Profile /> : 
+                <Navigate to="/" replace />
+            } 
+          />
+           <Route 
+            path="/chat-history" 
+            element={
+              isAuthenticated ? 
+                <ChatHistory /> : 
                 <Navigate to="/" replace />
             } 
           />
