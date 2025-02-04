@@ -1,0 +1,7 @@
+{
+    "template_folder" : "./templates",
+    "host" : "127.0.0.1",
+    "port" : "5555",
+    "debug" : "True",
+    "length_password" : 8
+}
