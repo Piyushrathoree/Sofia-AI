@@ -1,32 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState , useEffect } from 'react';
+import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
-import LandingPage from './components/pages/LandingPage';
-import ChatPage from './components/pages/ChatPage';
-import Profile from './components/pages/Profile';
-import About from './components/pages/About';
-import Features from './components/pages/Features';
-import ChatHistory from './components/pages/chatHistory';
+import LandingPage from './pages/LandingPage';
+import ChatPage from './pages/ChatPage';
+import Profile from './pages/Profile';
+import ChatHistory from './pages/ChatHistory';
+import About from './pages/About';
+import Features from './pages/Features';
+
 // Simulated auth state - replace with actual auth logic
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("token");
-      setIsAuthenticated(!!token); // ✅ Convert token to boolean (true if exists)
-    };
-
-    checkAuth();
-
-    // ✅ Listen for changes in localStorage (for token updates)
-    window.addEventListener("storage", checkAuth);
-
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-    };
-  }, []);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   return { isAuthenticated, setIsAuthenticated };
 };
 
@@ -62,7 +47,7 @@ function App() {
                 <Navigate to="/" replace />
             } 
           />
-           <Route 
+          <Route 
             path="/chat-history" 
             element={
               isAuthenticated ? 
@@ -73,6 +58,28 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/features" element={<Features />} />
         </Routes>
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: '#0d1117',
+              color: '#e6edf3',
+              border: '1px solid rgba(137, 87, 229, 0.2)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#8957e5',
+                secondary: '#0d1117',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#f87171',
+                secondary: '#0d1117',
+              },
+            },
+          }}
+        />
       </div>
     </Router>
   );

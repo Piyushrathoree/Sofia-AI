@@ -44,7 +44,10 @@ const loginUser = async (req, res) => {
             .status(400)
             .json({ message: "User not found, please signUp" });
     }
-
+    const isMatch = await User.comparePassword(password, existingUser.password);
+    if (!isMatch) {
+        return res.status(400).json({ message: "Invalid credentials" });
+    }
     const token = await existingUser.generateToken();
     if (!token) {
         return res.status(400).json({ message: "Token not found" });

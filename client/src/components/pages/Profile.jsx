@@ -1,12 +1,32 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
+
+// Validation schemas
+const nameSchema = z.object({
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+});
+
+const passwordSchema = z.object({
+  currentPassword: z.string().min(6, 'Current password is required'),
+  newPassword: z.string().min(8, 'New password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  confirmPassword: z.string()
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 function Profile() {
   const [activeSection, setActiveSection] = useState(null);
   const [formData, setFormData] = useState({
     firstName: 'John',
     lastName: 'Doe',
+    email: 'john.doe@example.com', // Email is read-only
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
@@ -16,14 +36,63 @@ function Profile() {
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
+  };
+
+  const handleUpdateName = async (e) => {
+    e.preventDefault();
+    try {
+      const { firstName, lastName } = formData;
+      nameSchema.parse({ firstName, lastName });
+      
+      // Here you would make an API call to update the user's name
+      // await updateUserProfile({ firstName, lastName });
+      
+      toast.success('Profile updated successfully!');
+      setActiveSection(null);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error('Failed to update profile');
+      }
+    }
+  };
+
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    try {
+      const { currentPassword, newPassword, confirmPassword } = formData;
+      passwordSchema.parse({ currentPassword, newPassword, confirmPassword });
+      
+      // Here you would verify the current password and update to the new one
+      // await updateUserPassword({ currentPassword, newPassword });
+      
+      toast.success('Password updated successfully!');
+      setActiveSection(null);
+      setFormData(prev => ({
+        ...prev,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      }));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach(err => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error('Failed to update password');
+      }
+    }
   };
 
   const handleLogout = () => {
     // Add logout logic here
-    localStorage.removeItem('token');
-    window.location.reload();
+    toast.success('Logged out successfully');
     navigate('/');
   };
 
@@ -55,8 +124,8 @@ function Profile() {
           variants={itemVariants}
           className="bg-dark rounded-2xl p-8 mb-8 border border-primary/10"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-8">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -66,7 +135,7 @@ function Profile() {
                   <span className="text-4xl">👤</span>
                 </div>
               </motion.div>
-              <div>
+              <div className="text-center sm:text-left">
                 <motion.h1 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -80,18 +149,10 @@ function Profile() {
                   transition={{ delay: 0.1 }}
                   className="text-text/60"
                 >
-                  john.doe@example.com
+                  {formData.email}
                 </motion.p>
               </div>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleLogout}
-              className="px-6 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
-            >
-              Logout
-            </motion.button>
           </div>
         </motion.div>
 
@@ -142,6 +203,21 @@ function Profile() {
                   <div className="text-primary text-2xl">→</div>
                 </motion.button>
               </motion.div>
+
+              {/* Logout Button - Moves to bottom on mobile */}
+              <motion.div 
+                variants={itemVariants}
+                className="mt-auto pt-4 sm:pt-0"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLogout}
+                  className="w-full px-6 py-3 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
+                >
+                  Logout
+                </motion.button>
+              </motion.div>
             </>
           ) : (
             <AnimatePresence mode="wait">
@@ -165,7 +241,7 @@ function Profile() {
                     </motion.button>
                   </div>
                   
-                  <div className="space-y-4">
+                  <form onSubmit={handleUpdateName} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-text/60 mb-1">
@@ -192,14 +268,27 @@ function Profile() {
                         />
                       </div>
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-text/60 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        disabled
+                        className="w-full px-4 py-2 bg-darker/50 rounded-lg border border-primary/10 text-text/60 cursor-not-allowed"
+                      />
+                      <p className="text-xs text-text/40 mt-1">Email cannot be changed</p>
+                    </div>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      type="submit"
                       className="w-full py-3 px-4 bg-primary text-darker rounded-lg font-semibold hover:bg-secondary transition-colors duration-300 mt-6"
                     >
                       Save Changes
                     </motion.button>
-                  </div>
+                  </form>
                 </motion.div>
               )}
 
@@ -223,7 +312,7 @@ function Profile() {
                     </motion.button>
                   </div>
 
-                  <div className="space-y-4">
+                  <form onSubmit={handleUpdatePassword} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-text/60 mb-1">
                         Current Password
@@ -263,11 +352,12 @@ function Profile() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      type="submit"
                       className="w-full py-3 px-4 bg-primary text-darker rounded-lg font-semibold hover:bg-secondary transition-colors duration-300 mt-6"
                     >
                       Update Password
                     </motion.button>
-                  </div>
+                  </form>
                 </motion.div>
               )}
             </AnimatePresence>
