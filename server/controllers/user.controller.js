@@ -38,13 +38,13 @@ const loginUser = async (req, res) => {
         return res.status(400).json({ message: "Please fill all the fields" });
     }
 
-    const existingUser = await User.findOne({ email }).select("-password");
+    const existingUser = await User.findOne({ email }).select("+password");
     if (!existingUser) {
         return res
             .status(400)
             .json({ message: "User not found, please signUp" });
     }
-    const isMatch = await User.comparePassword(password, existingUser.password);
+    const isMatch = await existingUser.isPasswordCorrect(password );
     if (!isMatch) {
         return res.status(400).json({ message: "Invalid credentials" });
     }

@@ -1,17 +1,37 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
-import LandingPage from './pages/LandingPage';
-import ChatPage from './pages/ChatPage';
-import Profile from './pages/Profile';
-import ChatHistory from './pages/ChatHistory';
-import About from './pages/About';
-import Features from './pages/Features';
-
+import LandingPage from "./components/pages/LandingPage";
+import ChatPage from "./components/pages/ChatPage";
+import Profile from './components/pages/Profile';
+import ChatHistory from "./components/pages/ChatHistory";
+import About from "./components/pages/About";
+import Features from "./components/pages/Features";
+import {jwtDecode} from "jwt-decode";
 // Simulated auth state - replace with actual auth logic
 const useAuth = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const checkAuthToken = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp > currentTime) {
+          return true;
+        }
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    setIsAuthenticated(checkAuthToken());
+  }, []);
   return { isAuthenticated, setIsAuthenticated };
 };
 
