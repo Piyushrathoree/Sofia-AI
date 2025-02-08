@@ -9,7 +9,7 @@ function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl font-bold text-text mb-8">About MindMeld AI</h1>
+          <h1 className="text-4xl font-bold text-text mb-8">About Sofia AI</h1>
           
           <div className="prose prose-invert">
             <div className="bg-dark rounded-lg p-8 mb-8">
