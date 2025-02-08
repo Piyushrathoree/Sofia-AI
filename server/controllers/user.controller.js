@@ -21,7 +21,6 @@ const registerUser = async (req, res) => {
         email,
         password: hashedPass,
     });
-    
 
     if (!newUser) {
         return res
@@ -30,7 +29,7 @@ const registerUser = async (req, res) => {
     }
     // Save the new user before returning a response
     await newUser.save();
-    res.status(201).json({ message: "User created successfully" });
+    return res.status(201).json({ message: "User created successfully" });
 };
 
 const loginUser = async (req, res) => {
@@ -45,7 +44,7 @@ const loginUser = async (req, res) => {
             .status(400)
             .json({ message: "User not found, please signUp" });
     }
-    const isMatch = await existingUser.isPasswordCorrect(password );
+    const isMatch = await existingUser.isPasswordCorrect(password);
     if (!isMatch) {
         return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -55,7 +54,8 @@ const loginUser = async (req, res) => {
     }
     // Set token in localStorage
 
-    res.status(200)
+    return res
+        .status(200)
         .cookie("token", token, {
             httpOnly: true, // Prevent access from JavaScript
             sameSite: "Strict", // Prevent CSRF
@@ -70,14 +70,16 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-    const token = req.cookies.token;
+    const token = req.cookies;
     if (!token) {
+        console.log("no token found in cookies to logout");
         return res.status(400).json({ message: "Already logged out" });
     }
+    res.clearCookie("token");
 
-    res.clearCookie("token").status(200).json({
+    return res.status(200).json({
+        success: true,
         message: "User logged out successfully",
-        localStorageToken: "localStorage.removeItem('token')",
     });
 };
 
@@ -86,21 +88,57 @@ const getUserProfile = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
     }
-    res.json({ success: true, user: user });
+
+    return res.json({ success: true, user: user });
 };
 
-const updateProfile = async (req ,res ) =>{
+const updateProfile = async (req, res) => {
     const user = req.user;
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
     }
     const { firstName, lastName } = req.body;
-    if (!firstName &&!lastName) {
-        return res.status(400).json({ message: "Please provide new first name or last name" });
+    if (!firstName && !lastName) {
+        return res
+            .status(400)
+            .json({ message: "Please provide new first name or last name" });
     }
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     await user.save();
-    res.json({ success: true, user });
-}
-export { registerUser, loginUser, logoutUser, getUserProfile };
+    return res.json({ success: true, user });
+};
+
+const updatePassword = async (req, res) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+        return res
+            .status(400)
+            .json({ message: "Please provide all the fields" });
+    }
+    const isMatch = await user.isPasswordCorrect(currentPassword);
+
+    if (!isMatch) {
+        return res.status(400).json({ message: "Invalid current password" });
+    }
+    const hashedPass = await User.hashPass(newPassword);
+    user.password = hashedPass;
+    await user.save();
+    return res.json({
+        success: true,
+        message: "Password updated successfully",
+    });
+};
+
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    getUserProfile,
+    updateProfile,
+    updatePassword,
+};
