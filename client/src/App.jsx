@@ -19,6 +19,7 @@ const useAuth = () => {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
+
         if (decodedToken.exp > currentTime) {
           return true;
         }
@@ -26,8 +27,10 @@ const useAuth = () => {
         console.error('Invalid token:', error);
       }
     }
+  
     return false;
   };
+
 
   useEffect(() => {
     setIsAuthenticated(checkAuthToken());

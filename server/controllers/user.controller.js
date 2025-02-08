@@ -21,6 +21,7 @@ const registerUser = async (req, res) => {
         email,
         password: hashedPass,
     });
+    
 
     if (!newUser) {
         return res
