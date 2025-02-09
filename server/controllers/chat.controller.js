@@ -38,17 +38,18 @@ const assistant = async (req, res) => {
 
     try {
         const responseData = await fetchWithRetry();
+console.log("working ....");
+console.log(responseData.contents[0].parts[0].text);
 
         // ✅ Handle empty AI response
         if (
-            !responseData ||
-            !responseData.contents ||
-            !responseData.contents[0]?.parts[0]?.text
+            !responseData 
         ) {
             return res
                 .status(500)
                 .json({ success: false, error: "AI response is empty." });
         }
+console.log("working");
 
         const chatHistory = new History({
             userId: req.user._id, // ✅ Ensure the conversation is linked to the user
