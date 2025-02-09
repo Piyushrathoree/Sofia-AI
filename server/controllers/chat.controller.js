@@ -1,5 +1,5 @@
 import axios from "axios";
-import { History } from "../models/chatHistory.model";
+import { History } from "../models/chatHistory.model.js";
 
 const assistant = async (req, res) => {
     const { prompt } = req.body;
