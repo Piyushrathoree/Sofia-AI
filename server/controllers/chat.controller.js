@@ -1,6 +1,7 @@
 import axios from "axios";
 import { History } from "../models/chatHistory.model.js";
 
+// ✅ AI Assistant Function (Handles AI Responses & Saves to History)
 const assistant = async (req, res) => {
     const { prompt } = req.body;
 
@@ -38,7 +39,7 @@ const assistant = async (req, res) => {
     try {
         const responseData = await fetchWithRetry();
 
-        // ✅ Handle empty response
+        // ✅ Handle empty AI response
         if (
             !responseData ||
             !responseData.contents ||
@@ -72,4 +73,34 @@ const assistant = async (req, res) => {
     }
 };
 
-export { assistant };
+// ✅ Get Chat History for a Specific User
+const getChatHistory = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        if (!userId) {
+            return res
+                .status(400)
+                .json({ success: false, error: "User ID is required." });
+        }
+
+        // ✅ Fetch all chat history for the user, sorted by newest first
+        const chatHistory = await History.find({ userId }).sort({
+            createdAt: -1,
+        });
+
+        if (!chatHistory.length) {
+            return res.json({ success: true, data: [], message: "No chat history found." });
+        }
+
+        res.json({ success: true, data: chatHistory });
+    } catch (error) {
+        console.error("Error fetching chat history:", error);
+        res.status(500).json({
+            success: false,
+            error: "Failed to fetch chat history.",
+        });
+    }
+};
+
+export { assistant, getChatHistory };
