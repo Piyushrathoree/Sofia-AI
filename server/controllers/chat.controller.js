@@ -16,7 +16,7 @@ const assistant = async (req, res) => {
 
     // Use the provided API key (for testing only)
     const apiKey =
-        "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";
+        process.env.API_KEY;
 
     try {
         const response = await fetch(
