@@ -24,24 +24,31 @@ async function registerUser(firstName, lastName, email, password) {
 
 async function loginUser(email, password) {
   if (!email || !password) throw new Error("Please fill all fields");
+
+  console.log("Logging in with:", email, password); // Debugging Log
+
   try {
-    const response = await axios.post(`${URL}/login`, {
-      email,
-      password,
-    });
-    console.log("login done successfully");
-    
-    if(!response) throw new Error("Invalid credentials");
-    localStorage.setItem("token", response.data.token);
-    document.cookie = `token=${response.data.token}; path=/; max-age=86400`; 
-    const data =  response.data;
-    console.log(data);
-    return data;
+    const response = await axios.post(`${URL}/login`, { email, password });
+
+    // ✅ Ensure response contains expected data
+    if (!response.data || !response.data.token) {
+      throw new Error(response.data.message || "Invalid credentials");
+    }
+
+    // ✅ Store token properly
+    const token = response.data.token;
+    localStorage.setItem("token", token);
+    document.cookie = `token=${token}; path=/; max-age=86400`;
+
+    console.log("Login successful:", response.data);
+
+    return response.data;
   } catch (error) {
-    console.error(error);
-    throw new Error("Failed to login user");
+    console.error("Login error:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to login user");
   }
 }
+
 
 async function getUser(userId) {
   if (!userId) throw new Error("User ID is required");

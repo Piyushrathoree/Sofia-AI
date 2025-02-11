@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import useFetch from "../hooks/useFetch";
+import useFetch from "../hooks/useFetch.js";
 
 function ChatInterface() {
   const [messages, setMessages] = useState([
@@ -11,10 +11,10 @@ function ChatInterface() {
     },
   ]);
   const [prompt, setPrompt] = useState("");
-  const [loadingResponse, setLoadingResponse] = useState(false); // ✅ Track response waiting
+  const [loadingResponse, setLoadingResponse] = useState(false); // Track response waiting
   const messagesEndRef = useRef(null);
 
-  const { fetchData } = useFetch(); // ✅ Using API call properly
+  const { fetchData } = useFetch(); // Using API call properly
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,50 +23,60 @@ function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  
+  // Helper function to remove leading asterisks (*) from each line
+  const removeAsterisks = (text) => {
+    return text.replace(/^\s*\*\s*/gm, "");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim()) return;
-  
+
     // Add user message
     const userMessage = {
       id: messages.length + 1,
       role: "user",
       content: prompt.trim(),
     };
-  
+
     setMessages((prev) => [...prev, userMessage]);
     setPrompt("");
-    setLoadingResponse(true); // ✅ Show "Thinking..." while waiting
-  
+    setLoadingResponse(true); // Show "Thinking..." while waiting
+
     try {
-      console.log(prompt);
-      
-      const response = await fetchData(prompt); // ✅ Correct API call
-  
+      console.log("Prompt:", prompt);
+
+      const response = await fetchData(prompt); // Correct API call
+
       console.log("AI Response:", response);
-  
-      setLoadingResponse(false); // ✅ Stop showing "Thinking..."
-  
-      // ✅ Extract AI response text safely
+
+      setLoadingResponse(false); // Stop showing "Thinking..."
+
+      // Extract AI response text safely
       let aiResponseText = response.success
         ? response.data
         : "AI model is experiencing high usage. Please try again later.";
-  
+
+      // Remove any leading asterisks (*) from the response
+      aiResponseText = removeAsterisks(aiResponseText);
+
       // Add AI message to the chat
       const aiMessage = {
         id: messages.length + 2,
         role: "assistant",
         content: aiResponseText,
       };
-  
+
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error handling AI response:", error);
       setLoadingResponse(false);
-  
-      // ✅ Show the actual API error message instead of a generic one
-      const errorMessage = error.response?.data?.message || "Something went wrong. Please try again.";
+
+      // Show the actual API error message instead of a generic one
+      const errorMessage =
+        error.response?.data?.message ||
+        "Something went wrong. Please try again.";
       setMessages((prev) => [
         ...prev,
         {
@@ -77,7 +87,7 @@ function ChatInterface() {
       ]);
     }
   };
-  
+
   return (
     <div className="min-h-screen pt-20 bg-darker">
       <div className="max-w-3xl mx-auto px-4 py-8">
@@ -91,7 +101,9 @@ function ChatInterface() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
                     className={`max-w-[80%] rounded-lg px-4 py-2 ${
@@ -117,7 +129,7 @@ function ChatInterface() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* prompt Area */}
+          {/* Prompt Area */}
           <div className="border-t border-gray-dark p-4">
             <form onSubmit={handleSubmit} className="flex space-x-4">
               <input
