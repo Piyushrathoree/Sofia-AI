@@ -13,18 +13,27 @@ export default function useFetch() {
         { prompt: prompt },
         { withCredentials: true }
       );
-
+      console.log(response);
+      
       console.log("API Response:", response.data);
-
-      if (response.data.success && response.data.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-        return { success: true, data: response.data.data.candidates[0].content.parts[0].text };
+      if (
+        response.data.success && response.data.data
+      ) {
+        return {
+          success: true,
+          data: response.data.data,
+        };
       } else {
         return { success: false, data: "Invalid AI response format." };
       }
     } catch (error) {
       console.error("Fetch error:", error);
       setError(error);
-      return { success: false, data: "An error occurred while fetching AI response.", error };
+      return {
+        success: false,
+        data: "An error occurred while fetching AI response.",
+        error,
+      };
     } finally {
       setLoading(false);
     }
