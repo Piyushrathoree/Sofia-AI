@@ -27,7 +27,7 @@ const assistant = async (req, res) => {
                 // });
                 // return response.data;
                 const genAI = new GoogleGenerativeAI(
-                    "AIzaSyBoDphs85nSXt6PAYF2I156xJIPV725zD0"
+                    process.env.GEMINI_API_KEY
                 );
                 const model = genAI.getGenerativeModel({
                     model: "gemini-2.0-flash",
