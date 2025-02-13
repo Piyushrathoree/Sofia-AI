@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import useValidate from "../../hooks/useValidate";
+import toast from "react-hot-toast";
 function SignUp({ onSwitchToLogin }) {
   const { registerUser } = useValidate();
   const [formData, setFormData] = useState({
@@ -16,7 +17,6 @@ function SignUp({ onSwitchToLogin }) {
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle sign up logic here
@@ -26,6 +26,7 @@ function SignUp({ onSwitchToLogin }) {
       formData.email,
       formData.password
     );
+    toast.success("User Registered Successfully!! Please Login");
     setFormData({ firstName: "", lastName: "", email: "", password: "" }); // Reset form fields after successful registration
     onSwitchToLogin(); // Switch to login page after successful registration
   };
