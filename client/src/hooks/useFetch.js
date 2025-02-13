@@ -5,23 +5,27 @@ export default function useFetch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async (prompt) => {
+  // Now accepts an optional conversationId
+  const fetchData = async (prompt, conversationId = null) => {
     setLoading(true);
     try {
+      // Build the request body based on whether conversationId exists
+      const requestBody = conversationId
+        ? { prompt, conversationId }
+        : { prompt };
       const response = await axios.post(
-        "http://localhost:5000/api/chat/Ai", // Ensure this is correct
-        { prompt: prompt },
+        "http://localhost:5000/api/chat/Ai", // Make sure this endpoint is correct
+        requestBody,
         { withCredentials: true }
       );
-      console.log(response);
-      
-      console.log("API Response:", response.data);
-      if (
-        response.data.success && response.data.data
-      ) {
+      console.log("API Response:", response);
+
+      // Check if the API returned a successful response
+      if (response.data.success && response.data) {
         return {
           success: true,
-          data: response.data.data,
+          data: response.data.aiResponse,
+          conversationId: response.data.conversationId, // May be undefined if updating an existing conversation
         };
       } else {
         return { success: false, data: "Invalid AI response format." };
