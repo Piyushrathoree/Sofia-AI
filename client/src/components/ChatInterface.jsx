@@ -11,10 +11,13 @@ function ChatInterface() {
     },
   ]);
   const [prompt, setPrompt] = useState("");
-  const [loadingResponse, setLoadingResponse] = useState(false); // Track response waiting
-  const messagesEndRef = useRef(null);
+  const [loadingResponse, setLoadingResponse] = useState(false);
+  // State to keep track of the current conversation; null means a new conversation will be created
+  const [conversationId, setConversationId] = useState(null);
 
-  const { fetchData } = useFetch(); // Using API call properly
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+  const { fetchData } = useFetch();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,17 +26,29 @@ function ChatInterface() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  
-  // Helper function to remove leading asterisks (*) from each line
+
+  // Helper function to remove leading asterisks (*) from each line (if needed)
   const removeAsterisks = (text) => {
     return text.replace(/^\s*\*\s*/gm, "");
+  };
+
+  // Handler to start a new conversation
+  const handleNewChat = () => {
+    setMessages([
+      {
+        id: 1,
+        role: "assistant",
+        content: "New conversation started. How can I help you today?",
+      },
+    ]);
+    setConversationId(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
-    // Add user message
+    // Add the user's message
     const userMessage = {
       id: messages.length + 1,
       role: "user",
@@ -42,26 +57,21 @@ function ChatInterface() {
 
     setMessages((prev) => [...prev, userMessage]);
     setPrompt("");
-    setLoadingResponse(true); // Show "Thinking..." while waiting
+    setLoadingResponse(true);
+    inputRef.current?.focus();
 
     try {
-      console.log("Prompt:", prompt);
+      // Send prompt along with the current conversationId (or null if it's a new chat)
+      const response = await fetchData(prompt, conversationId);
+      setLoadingResponse(false);
 
-      const response = await fetchData(prompt); // Correct API call
-
-      console.log("AI Response:", response);
-
-      setLoadingResponse(false); // Stop showing "Thinking..."
-
-      // Extract AI response text safely
       let aiResponseText = response.success
         ? response.data
         : "AI model is experiencing high usage. Please try again later.";
 
-      // Remove any leading asterisks (*) from the response
+      // Optionally, remove any unwanted asterisks from the AI response
       aiResponseText = removeAsterisks(aiResponseText);
 
-      // Add AI message to the chat
       const aiMessage = {
         id: messages.length + 2,
         role: "assistant",
@@ -69,11 +79,16 @@ function ChatInterface() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+
+      // If this was a new conversation, store the returned conversationId
+      if (!conversationId && response.conversationId) {
+        setConversationId(response.conversationId);
+      }
+
+      inputRef.current?.focus();
     } catch (error) {
       console.error("Error handling AI response:", error);
       setLoadingResponse(false);
-
-      // Show the actual API error message instead of a generic one
       const errorMessage =
         error.response?.data?.message ||
         "Something went wrong. Please try again.";
@@ -89,7 +104,7 @@ function ChatInterface() {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-darker">
+    <div className="min-h-screen pt-20 bg-darker overflow-hidden">
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="bg-dark rounded-lg shadow-lg border border-gray-dark h-[calc(100vh-120px)] flex flex-col">
           {/* Messages Area */}
@@ -139,6 +154,7 @@ function ChatInterface() {
                 placeholder="Type your message..."
                 className="flex-1 bg-darker max-w-[80%] text-text rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary border border-gray-dark"
                 disabled={loadingResponse}
+                ref={inputRef}
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -148,6 +164,14 @@ function ChatInterface() {
                 disabled={loadingResponse}
               >
                 {loadingResponse ? "Thinking..." : "Send"}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleNewChat}
+                className="bg-primary text-darker px-4 py-2 rounded-lg font-medium hover:bg-secondary transition-colors duration-300"
+              >
+                New Chat
               </motion.button>
             </form>
           </div>
