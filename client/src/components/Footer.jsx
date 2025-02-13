@@ -1,8 +1,14 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 function Footer() {
+  const handleClick = (e) => {
+    e.preventDefault();
+    toast.success("no content available");
+  };
+
   return (
-    <footer className="bg-darker border-t border-gray-dark">
+    <footer className="bg-darker border-t border-gray-dark -mb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between items-start">
           {/* Logo and Description */}
@@ -15,8 +21,8 @@ function Footer() {
               Sofia Ai
             </motion.div>
             <p className="text-text/60 text-sm">
-              The next generation of AI conversation.
-              Built with love by developers for developers.
+              The next generation of AI conversation. Built with love by
+              developers for developers.
             </p>
           </div>
 
@@ -26,18 +32,19 @@ function Footer() {
               <h3 className="text-text font-medium mb-3">Product</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#features" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="/features"
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#pricing" className="text-text/60 hover:text-primary text-sm transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#api" className="text-text/60 hover:text-primary text-sm transition-colors">
-                    API
+                  <a
+                    href="/about"
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
+                    About
                   </a>
                 </li>
               </ul>
@@ -47,17 +54,29 @@ function Footer() {
               <h3 className="text-text font-medium mb-3">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#blog" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="#"
+                    onClick={handleClick}
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Blog
                   </a>
                 </li>
                 <li>
-                  <a href="#careers" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="#"
+                    onClick={handleClick}
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Careers
                   </a>
                 </li>
                 <li>
-                  <a href="#contact" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="#"
+                    onClick={handleClick}
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Contact
                   </a>
                 </li>
@@ -68,12 +87,20 @@ function Footer() {
               <h3 className="text-text font-medium mb-3">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#privacy" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="#"
+                    onClick={handleClick}
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Privacy
                   </a>
                 </li>
                 <li>
-                  <a href="#terms" className="text-text/60 hover:text-primary text-sm transition-colors">
+                  <a
+                    href="#"
+                    onClick={handleClick}
+                    className="text-text/60 hover:text-primary text-sm transition-colors"
+                  >
                     Terms
                   </a>
                 </li>
@@ -94,9 +121,3 @@ function Footer() {
 }
 
 export default Footer;
-
-
-
-
-
-
