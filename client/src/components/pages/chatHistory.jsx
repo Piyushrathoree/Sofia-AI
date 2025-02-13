@@ -114,8 +114,8 @@ function ChatHistory() {
                             : "bg-gray-dark text-text mr-4"
                         }`}
                       >
-                        <p className="text-sm">{msg.userPrompt}{" ?"}</p>
-                       <br></br>
+                        <p className="text-sm">{msg.userPrompt}</p>
+                        <br />
                         <p className="text-sm">{msg.aiResponse}</p>
                       </div>
                     </motion.div>

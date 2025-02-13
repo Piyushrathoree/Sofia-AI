@@ -5,7 +5,7 @@ import Header from './components/Header';
 import LandingPage from "./components/pages/LandingPage";
 import ChatPage from "./components/pages/ChatPage";
 import Profile from './components/pages/Profile';
-import ChatHistory from "./components/pages/ChatHistory";
+import ChatHistory from "./components/pages/ChatHistory.jsx";
 import About from "./components/pages/About";
 import Features from "./components/pages/Features";
 import {jwtDecode} from "jwt-decode";
