@@ -22,9 +22,6 @@ function LandingPage({ onLogin }) {
         <AuthSection onLogin={onLogin} />
       </motion.div>
       <Footer />
-      <div>
-        <h1>Landing Page Content</h1>
-      </div>
     </div>
   );
 }
