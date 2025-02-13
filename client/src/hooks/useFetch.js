@@ -18,7 +18,6 @@ export default function useFetch() {
         requestBody,
         { withCredentials: true }
       );
-      console.log("API Response:", response);
 
       // Check if the API returned a successful response
       if (response.data.success && response.data) {

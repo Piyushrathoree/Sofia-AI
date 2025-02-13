@@ -35,7 +35,6 @@ const assistant = async (req, res) => {
                 return result.response.text();
             } catch (error) {
                 if (error.response?.status === 503 && i < retries - 1) {
-                    console.log(`Model overloaded, retrying... (${i + 1})`);
                     await new Promise((resolve) => setTimeout(resolve, delay));
                 } else {
                     throw error;
@@ -47,7 +46,6 @@ const assistant = async (req, res) => {
     try {
         // Get the AI response text (e.g., "detailed response text" from the model)
         const responseData = await fetchWithRetry();
-        console.log("AI response received:", responseData);
 
         if (!responseData) {
             return res
@@ -84,7 +82,6 @@ const assistant = async (req, res) => {
             await conversation.save();
         }
 
-        console.log("Chat history saved:", conversation);
         return res.json({
             success: true,
             conversationId: conversation._id,

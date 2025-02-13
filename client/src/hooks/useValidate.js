@@ -14,7 +14,6 @@ async function registerUser(firstName, lastName, email, password) {
       password,
     });
     const data = response.data;
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error); 
@@ -25,7 +24,6 @@ async function registerUser(firstName, lastName, email, password) {
 async function loginUser(email, password) {
   if (!email || !password) throw new Error("Please fill all fields");
 
-  console.log("Logging in with:", email, password); // Debugging Log
 
   try {
     const response = await axios.post(`${URL}/login`, { email, password });
@@ -40,7 +38,6 @@ async function loginUser(email, password) {
     localStorage.setItem("token", token);
     document.cookie = `token=${token}; path=/; max-age=86400`;
 
-    console.log("Login successful:", response.data);
 
     return response.data;
   } catch (error) {
@@ -56,7 +53,6 @@ async function getUser(userId) {
     const response = await axios.get(`${URL}/${userId}`);
     const data = response.data;
     setUser(data);
-    console.log(data);
     return data;
   } catch (error) {
     console.error(error);
@@ -66,7 +62,6 @@ async function getUser(userId) {
 async function logoutUser() {
   try {
     await axios.post(`${URL}/logout`);
-    console.log("Logged out successfully");
   } catch (error) {
     console.error(error);
     throw new Error("Failed to logout user");

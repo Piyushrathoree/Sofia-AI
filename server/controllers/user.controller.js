@@ -72,7 +72,6 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     const token = req.cookies;
     if (!token) {
-        console.log("no token found in cookies to logout");
         return res.status(400).json({ message: "Already logged out" });
     }
     res.clearCookie("token");

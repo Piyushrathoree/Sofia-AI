@@ -79,7 +79,6 @@ function Profile() {
     e.preventDefault();
     try {
       const { firstName, lastName } = updatedData;
-      console.log(firstName, lastName);
       nameSchema.parse({ firstName, lastName });
 
       const response = await axios.put(
@@ -116,7 +115,6 @@ function Profile() {
     e.preventDefault();
     try {
       const { currentPassword, newPassword, confirmPassword } = passwordFormData;
-      console.log(currentPassword, newPassword, confirmPassword);
       passwordSchema.parse({ currentPassword, newPassword, confirmPassword });
 
       const response = await axios.put(
