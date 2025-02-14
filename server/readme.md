@@ -12,6 +12,8 @@ This project is a backend server built with Node.js and Express. It includes use
 - [Dependencies](#dependencies)
 - [Project Structure](#project-structure)
 - [API Endpoints](#api-endpoints)
+- [Middleware](#middleware)
+- [Models](#models)
 
 ## Installation
 
@@ -31,9 +33,11 @@ This project is a backend server built with Node.js and Express. It includes use
 ## Scripts
 
 - `npm start`: Start the server.
+- `npm run dev`: Start the server with nodemon for development.
 
 ## Dependencies
 
+- `@google/generative-ai`: ^0.21.0
 - `axios`: ^1.7.9
 - `bcrypt`: ^5.1.1
 - `cookie-parser`: ^1.4.7
@@ -42,14 +46,14 @@ This project is a backend server built with Node.js and Express. It includes use
 - `express`: ^4.21.2
 - `jsonwebtoken`: ^9.0.2
 - `mongoose`: ^8.9.5
+- `nodemon`: ^3.1.9
+- `openai`: ^4.83.0
+- `serverless-http`: ^3.2.0
 
 ## Project Structure
 
 ```plaintext
-```plaintext
 .
-├── api
-│   ├── index.js
 ├── controllers
 │   ├── chat.controller.js
 │   └── user.controller.js
@@ -58,14 +62,15 @@ This project is a backend server built with Node.js and Express. It includes use
 ├── middleware
 │   └── auth.middleware.js
 ├── models
+│   ├── chatHistory.model.js
 │   └── user.model.js
 ├── routes
 │   ├── chat.routes.js
 │   └── user.routes.js
 ├── app.js
 ├── index.js
-└── package.json
-```
+├── package.json
+└── .gitignore
 ```
 
 ## API Endpoints
@@ -86,8 +91,7 @@ This project is a backend server built with Node.js and Express. It includes use
     - Response:
         ```json
         {
-            "message": "User created successfully",
-            "newUser": { ... }
+            "message": "User created successfully"
         }
         ```
 
@@ -118,9 +122,56 @@ This project is a backend server built with Node.js and Express. It includes use
         }
         ```
 
+- **GET /api/user/profile**
+    - Retrieves the profile of the authenticated user.
+    - Requires authentication.
+    - Response:
+        ```json
+        {
+            "success": true,
+            "user": { ... }
+        }
+        ```
+
+- **PUT /api/user/update**
+    - Updates the profile of the authenticated user.
+    - Requires authentication.
+    - Request body:
+        ```json
+        {
+            "firstName": "John",
+            "lastName": "Doe"
+        }
+        ```
+    - Response:
+        ```json
+        {
+            "success": true,
+            "user": { ... }
+        }
+        ```
+
+- **PUT /api/user/change-password**
+    - Updates the password of the authenticated user.
+    - Requires authentication.
+    - Request body:
+        ```json
+        {
+            "currentPassword": "oldPassword123",
+            "newPassword": "newPassword123"
+        }
+        ```
+    - Response:
+        ```json
+        {
+            "success": true,
+            "message": "Password updated successfully"
+        }
+        ```
+
 ### Chat Routes
 
-- **POST /api/chat/**
+- **POST /api/chat/Ai**
     - Generates a response from the assistant.
     - Requires authentication.
     - Request body:
@@ -133,7 +184,18 @@ This project is a backend server built with Node.js and Express. It includes use
         ```json
         {
             "success": true,
-            "data": { ... }
+            "aiResponse": "I'm good, thank you!"
+        }
+        ```
+
+- **GET /api/chat/history**
+    - Retrieves the chat history for the authenticated user.
+    - Requires authentication.
+    - Response:
+        ```json
+        {
+            "success": true,
+            "history": [ ... ]
         }
         ```
 
@@ -151,16 +213,5 @@ This project is a backend server built with Node.js and Express. It includes use
         - `generateToken()`: Generates a JWT token.
         - `isPasswordCorrect(password)`: Compares the provided password with the hashed password.
 
-## Database
-
-- **db.js**
-    - Connects to the MongoDB database using Mongoose.
-
-## Starting the Server
-
-Run the following command to start the server:
-```sh
-npm start
-```
-
-The server will be running at `http://localhost:5000`.
+- **chatHistory.model.js**
+    - Chat history schema with fields: `userId`, `messages`, `createdAt`.
