@@ -10,6 +10,7 @@ Sofia AI is a modern web application built with React, Tailwind CSS, and Framer 
 - [Components](#components)
 - [Routing](#routing)
 - [Scripts](#scripts)
+- [Tailwind CSS Configuration](#tailwind-css-configuration)
 
 ## Dependencies
 
@@ -63,8 +64,20 @@ The project is organized as follows:
             LandingPage.jsx
             ChatPage.jsx
             Profile.jsx
+            About.jsx
+            Features.jsx
+            History.jsx
+        ChatInterface.jsx
+        AuthSection.jsx
+        Hero.jsx
+    /hooks
+        useFetch.js
+        useValidate.js
     App.jsx
     index.jsx
+    main.jsx
+    index.css
+    App.css
     tailwind.config.js
     package.json
 ```
@@ -82,6 +95,18 @@ The `ChatPage` component contains the `ChatInterface` where users can interact w
 ### Profile
 
 The `Profile` component displays user information and settings.
+
+### About
+
+The `About` component provides information about Sofia AI, its mission, technology, and values.
+
+### Features
+
+The `Features` component highlights the key features of Sofia AI.
+
+### History
+
+The `History` component displays the chat history of the user.
 
 ## Components
 
@@ -215,7 +240,6 @@ export default {
         },
     },
     plugins: [],
-    
 }
 ```
 
