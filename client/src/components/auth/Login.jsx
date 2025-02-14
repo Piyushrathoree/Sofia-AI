@@ -18,13 +18,23 @@ function Login({ onSwitchToSignup }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await loginUser(formData.email, formData.password);
-    toast.success("User successfully logged in");
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
-    setTimeout(() => {
-      setFormData({ email: "", password: "" });
-      window.location.reload();
-    }, 500);
+    try {
+      await loginUser(formData.email, formData.password);
+      toast.success("User successfully logged in");
+      setTimeout(() => {
+        setFormData({ email: "", password: "" });
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      // Display error message from the thrown error
+      console.error("Login error:", error);
+      toast.error(error.message || "Invalid email or password");
+    }
   };
 
   return (
@@ -53,7 +63,6 @@ function Login({ onSwitchToSignup }) {
             value={formData.email}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-            required
           />
         </motion.div>
 
@@ -71,7 +80,6 @@ function Login({ onSwitchToSignup }) {
             value={formData.password}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-            required
           />
         </motion.div>
 
