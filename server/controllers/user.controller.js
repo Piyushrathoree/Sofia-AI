@@ -38,35 +38,39 @@ const loginUser = async (req, res) => {
         return res.status(400).json({ message: "Please fill all the fields" });
     }
 
-    const existingUser = await User.findOne({ email }).select("+password");
-    if (!existingUser) {
+    try {
+        const existingUser = await User.findOne({ email }).select("+password");
+        if (!existingUser) {
+            return res
+                .status(400)
+                .json({ message: "User not found, please signUp" });
+        }
+        const isMatch = await existingUser.isPasswordCorrect(password);
+        if (!isMatch) {
+            return res.status(400).json({ message : "invalid credentials"});
+        }
+        const token = await existingUser.generateToken();
+        if (!token) {
+            return res.status(400).json({ message: "Token not found" });
+        }
+        // Set token in localStorage
+    
         return res
-            .status(400)
-            .json({ message: "User not found, please signUp" });
-    }
-    const isMatch = await existingUser.isPasswordCorrect(password);
-    if (!isMatch) {
+            .status(200)
+            .cookie("token", token, {
+                httpOnly: true, // Prevent access from JavaScript
+                sameSite: "Strict", // Prevent CSRF
+                maxAge: 24 * 60 * 60 * 1000, // 1 day
+            })
+            .json({
+                message: "Login successful",
+                token,
+                existingUser,
+                localStorageToken: `localStorage.setItem('token', '${token}')`,
+            });
+    } catch (error) {
         return res.status(400).json({ message: "Invalid credentials" });
     }
-    const token = await existingUser.generateToken();
-    if (!token) {
-        return res.status(400).json({ message: "Token not found" });
-    }
-    // Set token in localStorage
-
-    return res
-        .status(200)
-        .cookie("token", token, {
-            httpOnly: true, // Prevent access from JavaScript
-            sameSite: "Strict", // Prevent CSRF
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-        })
-        .json({
-            message: "Login successful",
-            token,
-            existingUser,
-            localStorageToken: `localStorage.setItem('token', '${token}')`,
-        });
 };
 
 const logoutUser = async (req, res) => {
