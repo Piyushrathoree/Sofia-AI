@@ -46,7 +46,10 @@ This project is a backend server built with Node.js and Express. It includes use
 ## Project Structure
 
 ```plaintext
+```plaintext
 .
+├── api
+│   ├── index.js
 ├── controllers
 │   ├── chat.controller.js
 │   └── user.controller.js
@@ -62,6 +65,7 @@ This project is a backend server built with Node.js and Express. It includes use
 ├── app.js
 ├── index.js
 └── package.json
+```
 ```
 
 ## API Endpoints
