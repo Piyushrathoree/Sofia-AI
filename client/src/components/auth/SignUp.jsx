@@ -20,15 +20,24 @@ function SignUp({ onSwitchToLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle sign up logic here
-    await registerUser(
-      formData.firstName,
-      formData.lastName,
-      formData.email,
-      formData.password
-    );
-    toast.success("User Registered Successfully!! Please Login");
-    setFormData({ firstName: "", lastName: "", email: "", password: "" }); // Reset form fields after successful registration
-    onSwitchToLogin(); // Switch to login page after successful registration
+    if(!formData.firstName || !formData.email || !formData.password) {
+      toast.error("All fields are required");
+      return;
+    }
+    try {
+      await registerUser(
+        formData.firstName,
+        formData.lastName,
+        formData.email,
+        formData.password
+      );
+      toast.success("User Registered Successfully!! Please Login");
+      setFormData({ firstName: "", lastName: "", email: "", password: "" }); // Reset form fields after successful registration
+      onSwitchToLogin(); // Switch to login page after successful registration
+    } catch (error) {
+       toast.error(error.message );
+       setFormData({ firstName: "", lastName: "", email: "", password: "" });
+    }
   };
 
   return (
@@ -58,7 +67,7 @@ function SignUp({ onSwitchToLogin }) {
               value={formData.firstName}
               onChange={handleChange}
               className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-              required
+              
             />
           </motion.div>
 
@@ -76,7 +85,7 @@ function SignUp({ onSwitchToLogin }) {
               value={formData.lastName}
               onChange={handleChange}
               className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-              required
+              
             />
           </motion.div>
         </div>
@@ -95,7 +104,7 @@ function SignUp({ onSwitchToLogin }) {
             value={formData.email}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-            required
+            
           />
         </motion.div>
 
@@ -113,7 +122,7 @@ function SignUp({ onSwitchToLogin }) {
             value={formData.password}
             onChange={handleChange}
             className="w-full px-4 py-2 bg-darker border border-primary/20 rounded-lg focus:border-primary/40 focus:ring-1 focus:ring-primary/40 transition-all outline-none text-text"
-            required
+
           />
         </motion.div>
 
