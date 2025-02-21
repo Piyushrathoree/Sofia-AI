@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "nodemon index.js",
         "start": "node index.js",
-        "build": "cd ../frontend && npm install && npm run build && cp -r dist ../backend/client"
+        "build": "cd ../client && npm install && npm run build && cp -r dist ../server"
     },
     "dependencies": {
         "@google/generative-ai": "^0.21.0",
