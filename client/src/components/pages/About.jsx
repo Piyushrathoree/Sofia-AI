@@ -15,7 +15,7 @@ function About() {
             <div className="bg-dark rounded-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
               <p className="text-text/80 leading-relaxed mb-6">
-                MindMeld AI is on a mission to revolutionize human-AI interaction by creating more natural, 
+                Sofia AI is on a mission to revolutionize human-AI interaction by creating more natural, 
                 intuitive, and meaningful conversations between humans and machines.
               </p>
             </div>
@@ -23,7 +23,7 @@ function About() {
             <div className="bg-dark rounded-lg p-8 mb-8">
               <h2 className="text-2xl font-semibold mb-4">The Technology</h2>
               <p className="text-text/80 leading-relaxed mb-6">
-                Built on cutting-edge language models and neural networks, MindMeld AI understands context, 
+                Built on cutting-edge language models and neural networks, Sofia AI understands context, 
                 learns from interactions, and provides responses that feel natural and helpful.
               </p>
             </div>
