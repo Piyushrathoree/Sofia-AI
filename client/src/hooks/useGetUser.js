@@ -9,7 +9,7 @@ export default function useGetUser() {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/user/profile",
+        "/api/user/profile",
         { withCredentials: true }
       );
 

@@ -10,7 +10,7 @@ export default function useGetHistory() {
     async function fetchHistory() {
       setLoading(true);
       try {
-        const URL = "http://localhost:5000/api/chat";
+        const URL = "/api/chat";
         // Correct the URL string and remove the extra brace
         const response = await axios.get(`${URL}/history`, {
           withCredentials: true,

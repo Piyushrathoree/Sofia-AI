@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 
 export default function useValidate() {
-  const URL = "http://localhost:5000/api/user";
+  const URL = "/api/user";
   const [user, setUser] = React.useState(null);
   async function registerUser(firstName, lastName, email, password) {
     if (!firstName || !email || !password)

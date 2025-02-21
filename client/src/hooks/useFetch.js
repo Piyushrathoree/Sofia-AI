@@ -14,7 +14,7 @@ export default function useFetch() {
         ? { prompt, conversationId }
         : { prompt };
       const response = await axios.post(
-        "http://localhost:5000/api/chat/Ai", // Make sure this endpoint is correct
+        "/api/chat/Ai", // Make sure this endpoint is correct
         requestBody,
         { withCredentials: true }
       );
