@@ -155,4 +155,4 @@ SignUp.propTypes = {
 };
 
 export default SignUp;
-export default SignUp;
+
