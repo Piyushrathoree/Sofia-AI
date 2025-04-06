@@ -4,6 +4,8 @@ import React from "react";
 export default function useValidate() {
   const URL = "/api/user";
   const [user, setUser] = React.useState(null);
+
+  
   async function registerUser(firstName, lastName, email, password) {
     if (!firstName || !email || !password)
       throw new Error("Please fill all fields");
