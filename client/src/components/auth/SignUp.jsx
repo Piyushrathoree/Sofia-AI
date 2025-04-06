@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import PropTypes from "prop-types";
 import useValidate from "../../hooks/useValidate";
 import toast from "react-hot-toast";
 function SignUp({ onSwitchToLogin }) {
@@ -149,5 +150,9 @@ function SignUp({ onSwitchToLogin }) {
     </motion.div>
   );
 }
+SignUp.propTypes = {
+  onSwitchToLogin: PropTypes.func.isRequired,
+};
 
+export default SignUp;
 export default SignUp;
