@@ -6,6 +6,10 @@ const AuthenticateUser = async (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized" });
     }
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decodedToken);
+    console.log(decodedToken._id);
+    
+    
     const user = await User.findById(decodedToken._id).select("+password");
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });

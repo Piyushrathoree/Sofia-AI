@@ -10,7 +10,7 @@ export default function useValidate() {
     try {
       const response = await axios.post(`${URL}/register`, {
         firstName,
-        lastName:"",
+        lastName:lastName||"",
         email,
         password,
       });

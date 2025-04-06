@@ -135,6 +135,7 @@ const updatePassword = async (req, res) => {
         success: true,
         message: "Password updated successfully",
     });
+
 };
 
 export {

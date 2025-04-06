@@ -34,7 +34,7 @@ userSchema.methods.generateToken = function (){
         { _id: this._id },
         process.env.JWT_SECRET,
         {expiresIn:'24h'}
-    );                                                                                                                                                                                                                                                                                                                                                                                
+    );                                                                                                                                                                                                                                                
 }
 
 userSchema.methods.isPasswordCorrect = async function (password ) {
