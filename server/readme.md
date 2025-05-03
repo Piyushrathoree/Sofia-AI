@@ -74,7 +74,6 @@ This project is a backend server built with Node.js and Express. It includes use
 ```
 
 ## API Endpoints
-
 ### User Routes
 
 - **POST /api/user/register**
