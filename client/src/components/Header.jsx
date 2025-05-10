@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+// eslint-disable-next-line react/prop-types
 function Header({ isAuthenticated }) {
   const navigate = useNavigate();
   const location = useLocation();

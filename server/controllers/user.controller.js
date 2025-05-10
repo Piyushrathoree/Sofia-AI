@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
 
-const registerUser = async (req, res) => {
+const   registerUser = async (req, res) => {
     const { firstName, lastName = "", email, password } = req.body;
     if (!firstName || !email || !password) {
         return res.status(400).json({ message: "Please fill all the fields" });
